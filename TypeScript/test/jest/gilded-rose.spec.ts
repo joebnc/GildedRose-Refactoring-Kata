@@ -1,9 +1,18 @@
 import {Item, GildedRose} from '@/gilded-rose';
+import gildedRosePlay from './gilded-rose.json';
 
 describe('Gilded Rose', () => {
   function assertItem(item: Item, sellIn: number, quality: number) {
     expect(item.sellIn).toBe(sellIn);
     expect(item.quality).toBe(quality);
+  }
+
+  function assertItems(dayNumber: string, gildedRose: GildedRose) {
+    const dayPlay = gildedRosePlay[dayNumber];
+    for (let i = 0; i < gildedRose.items.length; i++) {
+      let dayItems = dayPlay.items[i];
+      assertItem(gildedRose.items[i], dayItems.sellIn, dayItems.quality);
+    }
   }
 
   it('should update item quality and sellIn values correctly', () => {
@@ -20,32 +29,9 @@ describe('Gilded Rose', () => {
       new Item("Conjured Mana Cake", 3, 6)]
     );
 
-    // day 1
-    gildedRose.updateQuality();
-
-
-    // Assert the updated item values
-    assertItem(gildedRose.items[0], 9, 19)
-    assertItem(gildedRose.items[1], 1, 1);
-    assertItem(gildedRose.items[2], 4, 6);
-    assertItem(gildedRose.items[3], 0, 80);
-    assertItem(gildedRose.items[4], -1, 80);
-    assertItem(gildedRose.items[5], 14, 21);
-    assertItem(gildedRose.items[6], 9, 50);
-    assertItem(gildedRose.items[7], 4, 50);
-
-    // day 2
-    gildedRose.updateQuality();
-
-    // Assert the updated item values
-    assertItem(gildedRose.items[0], 8, 18)
-    assertItem(gildedRose.items[1], 0, 2);
-    assertItem(gildedRose.items[2], 3, 5);
-    assertItem(gildedRose.items[3], 0, 80);
-    assertItem(gildedRose.items[4], -1, 80);
-    assertItem(gildedRose.items[5], 13, 22);
-    assertItem(gildedRose.items[6], 8, 50);
-    assertItem(gildedRose.items[7], 3, 50);
-
+    for (let day = 1; day < 10; day++) {
+      gildedRose.updateQuality();
+      assertItems("day " + day, gildedRose);
+    }
   });
 });
